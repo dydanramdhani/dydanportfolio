@@ -1,0 +1,2779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Didan Ramdhani Abdul Matin — Software Engineering Student</title>
+    <meta name="description"
+        content="Informatics Engineering Student at UTB. RPL SMKN 1 Banjar background. Building interfaces that function and feel precise.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Montserrat:wght@800;900&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.13/dist/lenis.min.js"></script>
+    <style>
+        :root {
+            /* Default Dark Mode */
+            --bg: #000000;
+            --deep-black: #0a0a0a;
+            --card: #1a1a1a;
+            --text: #ffffff;
+            --text-soft: rgba(255, 255, 255, 0.6);
+            --text-mute: rgba(255, 255, 255, 0.3);
+            --line: rgba(255, 255, 255, 0.12);
+            --line-strong: rgba(255, 255, 255, 0.22);
+            --nav-bg: rgba(0, 0, 0, 0.55);
+            --watermark-stroke: rgba(255, 255, 255, 0.06);
+            --ease-quiet: cubic-bezier(.22, 1, .36, 1);
+            --ease-precise: cubic-bezier(.4, 0, .2, 1);
+            --ease-emphasis: cubic-bezier(.16, 1, .3, 1);
+        }
+
+        /* Light Mode Overrides */
+        body.light-mode {
+            --bg: #ffffff;
+            --deep-black: #f5f5f5;
+            --card: #f0f0f0;
+            --text: #000000;
+            --text-soft: rgba(0, 0, 0, 0.65);
+            --text-mute: rgba(0, 0, 0, 0.4);
+            --line: rgba(0, 0, 0, 0.12);
+            --line-strong: rgba(0, 0, 0, 0.3);
+            --nav-bg: rgba(255, 255, 255, 0.65);
+            --watermark-stroke: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+            min-height: 100vh;
+            transition: background 0.4s var(--ease-quiet), color 0.4s var(--ease-quiet);
+        }
+
+        ::selection {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        /* Noise overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>");
+            animation: noise 20s steps(10) infinite;
+            mix-blend-mode: overlay;
+        }
+
+        @keyframes noise {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            20% {
+                transform: translate(-10%, 5%);
+            }
+
+            50% {
+                transform: translate(-10%, 5%);
+            }
+
+            80% {
+                transform: translate(-15%, 0);
+            }
+        }
+
+        /* Custom cursor */
+        .cursor-dot,
+        .cursor-ring {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 10000;
+            mix-blend-mode: difference;
+            opacity: 0;
+            transition: opacity .2s ease-out;
+            will-change: transform;
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .cursor-ring {
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transition: opacity .2s ease-out, width .3s ease-out, height .3s ease-out, border-color .3s ease-out;
+        }
+
+        .cursor-dot.is-visible,
+        .cursor-ring.is-visible {
+            opacity: 1;
+        }
+
+        @media (pointer: coarse) {
+
+            .cursor-dot,
+            .cursor-ring {
+                display: none;
+            }
+        }
+
+        /* Typography */
+        .label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .label::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 1px;
+            background: var(--text-mute);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            line-height: 0.92;
+        }
+
+        /* Nav */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--line);
+            transition: background 0.4s var(--ease-quiet), border-color 0.4s var(--ease-quiet);
+        }
+
+        .nav__logo {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav__logo::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--text);
+            border-radius: 50%;
+            animation: pulse-dot 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+        .nav__menu {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav__menu a {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            text-decoration: none;
+            transition: color 300ms var(--ease-quiet);
+            position: relative;
+        }
+
+        .nav__menu a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -6px;
+            height: 1px;
+            background: var(--text);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 400ms var(--ease-quiet);
+        }
+
+        .nav__menu a:hover {
+            color: var(--text);
+        }
+
+        .nav__menu a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav__right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav__time {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            color: var(--text-mute);
+        }
+
+        /* Controls (Language & Theme) */
+        .nav__controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .lang-switcher {
+            background: transparent;
+            border: 1px solid var(--line-strong);
+            color: var(--text);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: border-color 300ms var(--ease-quiet);
+        }
+
+        .lang-switcher:hover {
+            border-color: var(--text);
+        }
+
+        .lang-switcher option {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 22px;
+            background: var(--card);
+            border: 1px solid var(--line-strong);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 400ms var(--ease-quiet), border-color 400ms var(--ease-quiet);
+        }
+
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: var(--text);
+            border-radius: 50%;
+            transition: transform 400ms var(--ease-quiet);
+        }
+
+        body.light-mode .theme-toggle::after {
+            transform: translateX(18px);
+        }
+
+        /* Section base */
+        section {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 1.5rem;
+        }
+
+        .section-num {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            color: var(--text-mute);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 8rem 2rem 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero__watermark {
+            position: absolute;
+            bottom: -3rem;
+            left: -1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 22vw;
+            line-height: 0.8;
+            letter-spacing: -0.04em;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--watermark-stroke);
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .hero__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero__top-left {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .hero__top-left .label {
+            margin-bottom: 4px;
+        }
+
+        .hero__top-left small {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-mute);
+            letter-spacing: 0.08em;
+        }
+
+        .hero__time-block {
+            text-align: right;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-soft);
+            letter-spacing: 0.1em;
+            line-height: 1.8;
+        }
+
+        .hero__time-block strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .hero__title {
+            font-size: clamp(3rem, 9.5vw, 11rem);
+            line-height: 0.88;
+            letter-spacing: -0.035em;
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero__title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero__title .line__inner {
+            display: block;
+            transform: translateY(110%);
+        }
+
+        .hero__title .accent {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 400;
+            font-size: 0.22em;
+            letter-spacing: 0.1em;
+            vertical-align: super;
+            color: var(--text-soft);
+            margin-left: 0.5em;
+        }
+
+        .hero__subtitle {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: clamp(14px, 1.3vw, 17px);
+            line-height: 1.6;
+            color: var(--text-soft);
+            max-width: 540px;
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 2;
+            min-height: 5em;
+        }
+
+        .hero__caret {
+            display: inline-block;
+            width: 9px;
+            height: 1.05em;
+            background: var(--text);
+            vertical-align: text-bottom;
+            margin-left: 2px;
+            transform: translateY(-2px);
+        }
+
+        .hero__caret.is-hidden {
+            opacity: 0;
+        }
+
+        .hero__cta-row {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 800ms var(--ease-quiet), transform 800ms var(--ease-quiet);
+        }
+
+        .hero__cta-row.is-shown {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text);
+            text-decoration: none;
+            padding: 18px 28px;
+            border: 1px solid var(--line-strong);
+            background: transparent;
+            cursor: pointer;
+            transition: background 400ms var(--ease-quiet), color 400ms var(--ease-quiet), border-color 400ms var(--ease-quiet);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--text);
+            transform: translateY(101%);
+            transition: transform 500ms var(--ease-quiet);
+            z-index: -1;
+        }
+
+        .btn:hover {
+            color: var(--bg);
+            border-color: var(--text);
+        }
+
+        .btn:hover::before {
+            transform: translateY(0);
+        }
+
+        .btn .arrow {
+            display: inline-block;
+            width: 14px;
+            height: 1px;
+            background: currentColor;
+            position: relative;
+        }
+
+        .btn .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-top: 1px solid currentColor;
+            border-right: 1px solid currentColor;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .hero__cta-sec {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            color: var(--text-soft);
+            text-transform: uppercase;
+        }
+
+        .hero__cta-sec a {
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px solid var(--line-strong);
+            padding-bottom: 2px;
+            transition: border-color 300ms var(--ease-quiet);
+        }
+
+        .hero__cta-sec a:hover {
+            border-color: var(--text);
+        }
+
+        .hero__scroll {
+            position: absolute;
+            right: 2rem;
+            bottom: 2rem;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--text-mute);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+
+        .hero__scroll::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to top, transparent, var(--text-mute));
+            animation: scroll-line 2.4s var(--ease-quiet) infinite;
+        }
+
+        @keyframes scroll-line {
+            0% {
+                transform: scaleY(0);
+                transform-origin: top;
+            }
+
+            50% {
+                transform: scaleY(1);
+                transform-origin: top;
+            }
+
+            51% {
+                transform: scaleY(1);
+                transform-origin: bottom;
+            }
+
+            100% {
+                transform: scaleY(0);
+                transform-origin: bottom;
+            }
+        }
+
+        /* ===== ABOUT / IDENTITAS ===== */
+        .about {
+            padding: 10rem 2rem 8rem;
+        }
+
+        .about__grid {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 6rem;
+            align-items: start;
+        }
+
+        .about__left {
+            position: sticky;
+            top: 120px;
+        }
+
+        .about__heading {
+            font-size: clamp(2.4rem, 5vw, 4.4rem);
+            line-height: 0.95;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .about__heading .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .about__heading .line__inner {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 1100ms var(--ease-quiet);
+        }
+
+        .about__heading.is-in .line__inner {
+            transform: translateY(0);
+        }
+
+        .about__heading .line:nth-child(2) .line__inner {
+            transition-delay: 130ms;
+        }
+
+        .about__heading .line:nth-child(3) .line__inner {
+            transition-delay: 260ms;
+        }
+
+        .about__heading em {
+            font-style: italic;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            color: var(--text-soft);
+        }
+
+        .about__portrait {
+            width: 100%;
+            aspect-ratio: 4/5;
+            overflow: hidden;
+            background: var(--card);
+            position: relative;
+            margin-top: 2rem;
+            max-width: 380px;
+        }
+
+        .about__portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(1) contrast(1.05);
+            transition: transform 1.2s var(--ease-quiet), filter 1.2s var(--ease-quiet);
+        }
+
+        .about__portrait:hover img {
+            transform: scale(1.04);
+            filter: grayscale(0.7) contrast(1.05);
+        }
+
+        .about__portrait::after {
+            content: 'D.R.A.M · 2024';
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+        }
+
+        .about__right {
+            display: flex;
+            flex-direction: column;
+            gap: 5rem;
+        }
+
+        .identity-list {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 0;
+        }
+
+        .identity-list dt {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-mute);
+            padding: 22px 0;
+            border-top: 1px solid var(--line);
+            display: flex;
+            align-items: baseline;
+        }
+
+        .identity-list dd {
+            padding: 22px 0;
+            border-top: 1px solid var(--line);
+            font-size: 17px;
+            line-height: 1.5;
+            color: var(--text);
+        }
+
+        .identity-list dt:last-of-type,
+        .identity-list dd:last-of-type {
+            border-bottom: 1px solid var(--line);
+        }
+
+        .identity-list dd strong {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .identity-list dd small {
+            display: block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-mute);
+            letter-spacing: 0.08em;
+            margin-top: 4px;
+        }
+
+        .about__bio {
+            font-size: 19px;
+            line-height: 1.55;
+            color: var(--text);
+            max-width: 560px;
+        }
+
+        .about__bio p+p {
+            margin-top: 1.4rem;
+        }
+
+        .about__bio p .accent-word {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78em;
+            letter-spacing: 0.05em;
+            color: var(--text-soft);
+            border: 1px solid var(--line-strong);
+            padding: 2px 8px;
+            margin: 0 2px;
+            white-space: nowrap;
+        }
+
+        /* ===== PENDIDIKAN TIMELINE ===== */
+        .education {
+            padding: 8rem 2rem;
+            background: var(--deep-black);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            transition: background 0.4s var(--ease-quiet);
+        }
+
+        .education__head {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 6rem;
+            margin-bottom: 6rem;
+            align-items: end;
+        }
+
+        .education__title {
+            font-size: clamp(2.2rem, 4.5vw, 4rem);
+            line-height: 0.95;
+            margin-top: 1.5rem;
+        }
+
+        .education__title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .education__title .line__inner {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 1100ms var(--ease-quiet);
+        }
+
+        .education__title.is-in .line__inner {
+            transform: translateY(0);
+        }
+
+        .education__title .line:nth-child(2) .line__inner {
+            transition-delay: 140ms;
+        }
+
+        .education__intro {
+            font-size: 16px;
+            color: var(--text-soft);
+            line-height: 1.6;
+            max-width: 460px;
+            justify-self: end;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--line);
+        }
+
+        .timeline__card {
+            padding: 2rem 3rem 2rem 0;
+            position: relative;
+            border-top: 1px solid var(--line);
+        }
+
+        .timeline__card:last-child {
+            border-bottom: 1px solid var(--line);
+        }
+
+        .timeline__card:nth-child(even) {
+            padding: 2rem 0 2rem 3rem;
+        }
+
+        .timeline__year {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            color: var(--text-mute);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .timeline__year::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border: 1px solid var(--text-soft);
+            background: var(--bg);
+            border-radius: 50%;
+        }
+
+        .timeline__card:nth-child(odd) .timeline__year {
+            justify-content: flex-end;
+        }
+
+        .timeline__card:nth-child(odd) .timeline__year::after {
+            order: -1;
+        }
+
+        .timeline__card:nth-child(even) .timeline__year::after {
+            position: absolute;
+            left: -4px;
+            top: 2rem;
+            background: var(--text);
+            border-color: var(--text);
+        }
+
+        .timeline__institution {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            margin-bottom: 6px;
+        }
+
+        .timeline__card:nth-child(odd) .timeline__institution {
+            text-align: right;
+        }
+
+        .timeline__major {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: var(--text-soft);
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+        }
+
+        .timeline__card:nth-child(odd) .timeline__major {
+            text-align: right;
+        }
+
+        .timeline__desc {
+            font-size: 15px;
+            line-height: 1.55;
+            color: var(--text-soft);
+            max-width: 360px;
+        }
+
+        .timeline__card:nth-child(odd) .timeline__desc {
+            margin-left: auto;
+        }
+
+        .timeline__tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 1.4rem;
+        }
+
+        .timeline__card:nth-child(odd) .timeline__tags {
+            justify-content: flex-end;
+        }
+
+        .timeline__tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            border: 1px solid var(--line);
+            padding: 5px 10px;
+        }
+
+        /* ===== FOKUS / EXPERTISE ===== */
+        .focus {
+            padding: 10rem 2rem;
+        }
+
+        .focus__head {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 5rem;
+            align-items: end;
+        }
+
+        .focus__title {
+            font-size: clamp(2.4rem, 5vw, 4.4rem);
+            line-height: 0.95;
+        }
+
+        .focus__title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .focus__title .line__inner {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 1100ms var(--ease-quiet);
+        }
+
+        .focus__title.is-in .line__inner {
+            transform: translateY(0);
+        }
+
+        .focus__title .line:nth-child(2) .line__inner {
+            transition-delay: 140ms;
+        }
+
+        .focus__intro {
+            font-size: 16px;
+            color: var(--text-soft);
+            line-height: 1.65;
+            max-width: 440px;
+        }
+
+        .focus__grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border-top: 1px solid var(--line);
+            border-left: 1px solid var(--line);
+        }
+
+        .focus__item {
+            padding: 3rem 2.5rem;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            position: relative;
+            transition: background 400ms var(--ease-quiet);
+        }
+
+        .focus__item:hover {
+            background: var(--card);
+        }
+
+        .focus__item-num {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            color: var(--text-mute);
+            margin-bottom: 2.5rem;
+        }
+
+        .focus__item-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            margin-bottom: 1rem;
+        }
+
+        .focus__item-en {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            color: var(--text-soft);
+            margin-bottom: 1.5rem;
+        }
+
+        .focus__item-desc {
+            font-size: 14.5px;
+            line-height: 1.6;
+            color: var(--text-soft);
+            margin-bottom: 2rem;
+        }
+
+        .focus__item-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--line);
+        }
+
+        .focus__item-stack span {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-mute);
+            letter-spacing: 0.06em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .focus__item-stack span strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* ===== KARYA (Horizontal pin) ===== */
+        .works {
+            background: var(--deep-black);
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            padding: 8rem 0 6rem;
+            position: relative;
+            transition: background 0.4s var(--ease-quiet);
+        }
+
+        .works__head {
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 5rem;
+            align-items: end;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .works__title {
+            font-size: clamp(2.4rem, 5vw, 4.4rem);
+            line-height: 0.95;
+        }
+
+        .works__title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .works__title .line__inner {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 1100ms var(--ease-quiet);
+        }
+
+        .works__title.is-in .line__inner {
+            transform: translateY(0);
+        }
+
+        .works__title .line:nth-child(2) .line__inner {
+            transition-delay: 140ms;
+        }
+
+        .works__intro {
+            font-size: 16px;
+            color: var(--text-soft);
+            line-height: 1.65;
+            max-width: 440px;
+        }
+
+        .works__viewport {
+            position: relative;
+            width: 100%;
+        }
+
+        .works__sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .works__track {
+            display: flex;
+            gap: 2.5rem;
+            padding: 2rem 4rem;
+            will-change: transform;
+            transition: transform 200ms var(--ease-quiet);
+        }
+
+        .work-card {
+            flex-shrink: 0;
+            width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .work-card__img {
+            width: 100%;
+            aspect-ratio: 5/4;
+            background: var(--card);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .work-card__img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(1) contrast(1.05);
+            transition: transform 1.2s var(--ease-quiet), filter 1.2s var(--ease-quiet);
+            will-change: transform;
+        }
+
+        .work-card:hover .work-card__img img {
+            transform: scale(1.05);
+            filter: grayscale(0.5) contrast(1.05);
+        }
+
+        .work-card__img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 500ms var(--ease-quiet);
+        }
+
+        .work-card:hover .work-card__img::after {
+            opacity: 1;
+        }
+
+        .work-card__meta {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            color: var(--text-mute);
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+        }
+
+        .work-card__title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 22px;
+            letter-spacing: -0.015em;
+            line-height: 1.1;
+        }
+
+        .work-card__desc {
+            font-size: 14px;
+            color: var(--text-soft);
+            line-height: 1.5;
+        }
+
+        .work-card__tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 0.2rem;
+        }
+
+        .work-card__tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            color: var(--text-soft);
+            border: 1px solid var(--line);
+            padding: 3px 8px;
+            text-transform: uppercase;
+        }
+
+        .work-card__link {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text);
+            text-decoration: none;
+            margin-top: 0.8rem;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--text-soft);
+            transition: border-color 400ms var(--ease-quiet), gap 400ms var(--ease-quiet), color 400ms var(--ease-quiet);
+            width: fit-content;
+            position: relative;
+            z-index: 5;
+            cursor: pointer;
+        }
+
+        .work-card__link:hover {
+            border-color: var(--text);
+            gap: 18px;
+        }
+
+        .work-card__link .arrow {
+            display: inline-block;
+            width: 14px;
+            height: 1px;
+            background: currentColor;
+            position: relative;
+        }
+
+        .work-card__link .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            border-top: 1px solid currentColor;
+            border-right: 1px solid currentColor;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        .works__progress {
+            margin: 3rem auto 0;
+            width: 12rem;
+            height: 1px;
+            background: var(--line);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .works__progress-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0%;
+            background: var(--text);
+            transition: width 100ms linear;
+        }
+
+        .works__progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--text-mute);
+            text-transform: uppercase;
+            margin-top: 12px;
+        }
+
+        /* ===== PRINSIP ===== */
+        .principle {
+            padding: 10rem 2rem;
+            position: relative;
+        }
+
+        .principle__inner {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .principle__manifesto {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: clamp(1.6rem, 3vw, 2.6rem);
+            line-height: 1.25;
+            letter-spacing: -0.015em;
+        }
+
+        .principle__manifesto .line {
+            display: block;
+            overflow: hidden;
+            padding: 0 1.5rem;
+        }
+
+        .principle__manifesto .line__inner {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 1200ms var(--ease-quiet);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .principle__manifesto.is-in .line__inner {
+            transform: translateY(0);
+        }
+
+        .principle__manifesto .line:nth-child(1) .line__inner {
+            transition-delay: 0ms;
+        }
+
+        .principle__manifesto .line:nth-child(2) .line__inner {
+            transition-delay: 150ms;
+        }
+
+        .principle__manifesto .line:nth-child(3) .line__inner {
+            transition-delay: 300ms;
+        }
+
+        .principle__manifesto .line:nth-child(4) .line__inner {
+            transition-delay: 450ms;
+        }
+
+        .principle__manifesto .line:nth-child(5) .line__inner {
+            transition-delay: 600ms;
+        }
+
+        .principle__sign {
+            margin-top: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid var(--line);
+            padding-top: 2rem;
+        }
+
+        .principle__sign-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: -0.01em;
+        }
+
+        .principle__sign-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            color: var(--text-mute);
+            text-transform: uppercase;
+            text-align: right;
+            line-height: 1.7;
+        }
+
+        /* ===== KONTAK ===== */
+        .contact {
+            padding: 8rem 2rem 4rem;
+            border-top: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact__watermark {
+            position: absolute;
+            bottom: -2rem;
+            left: -1rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 20vw;
+            line-height: 0.8;
+            letter-spacing: -0.04em;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--watermark-stroke);
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .contact__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            margin-bottom: 6rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact__title {
+            font-size: clamp(2.8rem, 6vw, 5.5rem);
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+        }
+
+        .contact__title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .contact__title .line__inner {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 1100ms var(--ease-quiet);
+        }
+
+        .contact__title.is-in .line__inner {
+            transform: translateY(0);
+        }
+
+        .contact__title .line:nth-child(2) .line__inner {
+            transition-delay: 130ms;
+        }
+
+        .contact__right {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-top: 1.5rem;
+        }
+
+        .contact__email {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+            letter-spacing: -0.015em;
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px solid var(--line-strong);
+            padding-bottom: 12px;
+            display: inline-block;
+            transition: border-color 400ms var(--ease-quiet);
+        }
+
+        .contact__email:hover {
+            border-color: var(--text);
+        }
+
+        .contact__channels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            border-top: 1px solid var(--line);
+            margin-top: 1rem;
+        }
+
+        .contact__channel {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--line);
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: padding 400ms var(--ease-quiet);
+        }
+
+        .contact__channel:nth-child(odd) {
+            padding-right: 1.5rem;
+            border-right: 1px solid var(--line);
+        }
+
+        .contact__channel:nth-child(even) {
+            padding-left: 1.5rem;
+        }
+
+        .contact__channel:hover {
+            padding-left: 1rem;
+        }
+
+        .contact__channel:nth-child(odd):hover {
+            padding-left: 1rem;
+            padding-right: 0.5rem;
+        }
+
+        .contact__channel-name {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .contact__channel-handle {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-mute);
+            letter-spacing: 0.06em;
+        }
+
+        .contact__bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-top: 3rem;
+            border-top: 1px solid var(--line);
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact__availability {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--text-soft);
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact__availability::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--text);
+            border-radius: 50%;
+            animation: pulse-dot 2.4s ease-in-out infinite;
+        }
+
+        .contact__copyright {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-mute);
+            letter-spacing: 0.1em;
+            text-align: right;
+            line-height: 1.7;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .nav {
+                padding: 18px 24px;
+            }
+
+            .nav__menu {
+                display: none;
+            }
+
+            .nav__time {
+                display: none;
+            }
+
+            section {
+                padding: 6rem 1.5rem;
+            }
+
+            .hero {
+                padding: 6rem 1.5rem 4rem;
+            }
+
+            .hero__top {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .hero__time-block {
+                text-align: left;
+            }
+
+            .about {
+                padding: 6rem 1.5rem;
+            }
+
+            .about__grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .about__left {
+                position: static;
+            }
+
+            .education {
+                padding: 6rem 1.5rem;
+            }
+
+            .education__head {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .education__intro {
+                justify-self: start;
+            }
+
+            .timeline {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                display: none;
+            }
+
+            .timeline__card,
+            .timeline__card:nth-child(even) {
+                padding: 2rem 0;
+            }
+
+            .timeline__card:nth-child(odd) .timeline__year,
+            .timeline__card:nth-child(odd) .timeline__institution,
+            .timeline__card:nth-child(odd) .timeline__major,
+            .timeline__card:nth-child(odd) .timeline__desc,
+            .timeline__card:nth-child(odd) .timeline__tags {
+                text-align: left;
+                justify-content: flex-start;
+            }
+
+            .timeline__card:nth-child(odd) .timeline__desc {
+                margin-left: 0;
+            }
+
+            .timeline__card:nth-child(odd) .timeline__year::after {
+                order: 0;
+            }
+
+            .focus__head {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .focus__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .works__head {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .works__sticky {
+                position: static;
+                height: auto;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding: 2rem 0;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .works__track {
+                transform: none !important;
+                padding: 0 1.5rem;
+            }
+
+            .work-card {
+                width: 280px;
+                scroll-snap-align: start;
+            }
+
+            .works__progress {
+                display: none;
+            }
+
+            .principle__inner {
+                padding: 0;
+            }
+
+            .contact__grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .contact__bottom {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .nav__logo {
+                font-size: 11px;
+            }
+
+            .hero__scroll {
+                display: none;
+            }
+
+            .hero__cta-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+
+            .identity-list {
+                grid-template-columns: 1fr;
+            }
+
+            .identity-list dt {
+                padding: 14px 0 4px;
+                border-top: 1px solid var(--line);
+                border-bottom: none;
+            }
+
+            .identity-list dd {
+                padding: 0 0 14px;
+                border-top: none;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .identity-list dt:last-of-type,
+            .identity-list dd:last-of-type {
+                border-bottom: 1px solid var(--line);
+            }
+
+            .contact__channels {
+                grid-template-columns: 1fr;
+            }
+
+            .contact__channel:nth-child(odd) {
+                border-right: none;
+                padding-right: 0;
+            }
+
+            .contact__channel:nth-child(even) {
+                padding-left: 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .hero__title .line__inner,
+            .about__heading .line__inner,
+            .education__title .line__inner,
+            .focus__title .line__inner,
+            .works__title .line__inner,
+            .principle__manifesto .line__inner,
+            .contact__title .line__inner {
+                transform: translateY(0) !important;
+            }
+
+            .hero__cta-row {
+                opacity: 1;
+                transform: none;
+            }
+
+            .noise-overlay {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="noise-overlay" aria-hidden="true"></div>
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
+
+    <nav class="nav">
+        <div class="nav__logo">Didan (ディダン) — Portfolio</div>
+        <ul class="nav__menu">
+            <li><a href="#about" data-i18n="nav_about">Identity</a></li>
+            <li><a href="#education" data-i18n="nav_education">Education</a></li>
+            <li><a href="#focus" data-i18n="nav_focus">Focus</a></li>
+            <li><a href="#works" data-i18n="nav_works">Works</a></li>
+            <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+        </ul>
+        <div class="nav__right">
+            <div class="nav__controls">
+                <select id="langSwitcher" class="lang-switcher">
+                    <option value="en">EN</option>
+                    <option value="id">ID</option>
+                    <option value="jp">JP</option>
+                </select>
+                <div id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode"></div>
+            </div>
+            <div class="nav__time" id="navTime">— : — WIB</div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="hero">
+        <div class="hero__watermark">DIDAN</div>
+
+        <div class="hero__top">
+            <div class="hero__top-left">
+                <span class="label" data-i18n="hero_label">Portfolio · 2026 / 2027</span>
+                <small>Ciamis → Bandung, Indonesia</small>
+            </div>
+            <div class="hero__time-block">
+                <strong id="heroDate">—</strong><br>
+                <span id="heroTime">— : — : — WIB</span><br>
+                <span>107°E · GMT+7</span>
+            </div>
+        </div>
+
+        <h1 class="hero__title">
+            <span class="line"><span class="line__inner">Didan Ramdhani</span></span>
+            <span class="line"><span class="line__inner">Abdul Matin<span class="accent">[est.
+                        2007]</span></span></span>
+        </h1>
+
+        <p class="hero__subtitle" id="heroSubtitle">
+            <span class="hero__text"></span><span class="hero__caret" id="heroCaret"></span>
+        </p>
+
+        <div class="hero__cta-row" id="heroCta">
+            <a href="#works" class="btn">
+                <span data-i18n="hero_cta">View Works</span>
+                <span class="arrow"></span>
+            </a>
+            <span class="hero__cta-sec">
+                <span data-i18n="hero_cta_sec_1">or</span> <a href="#contact" data-i18n="hero_cta_sec_2">start a
+                    conversation</a>
+            </span>
+        </div>
+
+        <div class="hero__scroll" data-i18n="hero_scroll">Scroll down</div>
+    </section>
+
+    <!-- ===== ABOUT / IDENTITAS ===== -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-label-row">
+                <span class="label" data-i18n="about_label">01 / Identity</span>
+                <span class="section-num">§ 01 — 05</span>
+            </div>
+
+            <div class="about__grid">
+                <div class="about__left">
+                    <span class="label" data-i18n="about_short">Short Profile</span>
+                    <h2 class="about__heading">
+                        <span class="line"><span class="line__inner" data-i18n="about_h1">Building</span></span>
+                        <span class="line"><span class="line__inner" data-i18n="about_h2">interfaces that
+                                are</span></span>
+                        <span class="line"><span class="line__inner"><em data-i18n="about_h3">precise and
+                                    calm.</em></span></span>
+                    </h2>
+
+                    <div class="about__portrait">
+                        <img src="img/dydan2.jpg" alt="Potret Didan Ramdhani">
+                    </div>
+                </div>
+
+                <div class="about__right">
+                    <dl class="identity-list">
+                        <dt data-i18n="id_full_name">Full Name</dt>
+                        <dd>
+                            <strong>Didan Ramdhani Abdul Matin</strong>
+                            <small data-i18n="id_full_name_desc">Called: Didan</small>
+                        </dd>
+
+                        <dt data-i18n="id_dob">Place & Date of Birth</dt>
+                        <dd>
+                            <strong>Ciamis, 9 Oktober 2007</strong>
+                            <small data-i18n="id_dob_desc">18 years · West Java, Indonesia</small>
+                        </dd>
+
+                        <dt data-i18n="id_school">High School</dt>
+                        <dd>
+                            <strong>SMK Negeri 1 Banjar</strong>
+                            <small data-i18n="id_school_desc">Major: Software Engineering (RPL)</small>
+                        </dd>
+
+                        <dt data-i18n="id_uni">University</dt>
+                        <dd>
+                            <strong>Universitas Teknologi Bandung (UTB)</strong>
+                            <small data-i18n="id_uni_desc">Major: Informatics Engineering · Bachelor's</small>
+                        </dd>
+
+                        <dt data-i18n="id_dom">Domicile</dt>
+                        <dd>
+                            <strong data-i18n="id_dom_val">Ciamis, West Java</strong>
+                            <small data-i18n="id_dom_desc">Status: active student</small>
+                        </dd>
+
+                        <dt data-i18n="id_lang">Languages</dt>
+                        <dd>
+                            <strong>Indonesia (native) · English (intermediate) · Japan (intermediate)</strong>
+                            <small data-i18n="id_lang_desc">Technical docs read in EN</small>
+                        </dd>
+                    </dl>
+
+                    <div class="about__bio">
+                        <p data-i18n="bio_p1">I used to think software engineering was just about writing code that
+                            runs. But in RPL at SMKN 1 Banjar, I learned that good code is code that can still be read
+                            two years from now — by yourself, or by someone who has never met you.</p>
+                        <p data-i18n="bio_p2">Now at UTB, my focus slowly shifts from "it works" to "it feels right" —
+                            interfaces that aren't flashy, performance that isn't dramatic, and structures that can be
+                            inherited without surprises.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PENDIDIKAN ===== -->
+    <section class="education" id="education">
+        <div class="container">
+            <div class="section-label-row">
+                <span class="label" data-i18n="edu_label">02 / Education</span>
+                <span class="section-num">§ 02 — 05</span>
+            </div>
+
+            <div class="education__head">
+                <h2 class="education__title">
+                    <span class="line"><span class="line__inner" data-i18n="edu_h1">From RPL to</span></span>
+                    <span class="line"><span class="line__inner" data-i18n="edu_h2">Informatics
+                            Engineering.</span></span>
+                </h2>
+                <p class="education__intro" data-i18n="edu_intro">Three years in high school understanding the
+                    foundation, at university starting to question the foundation itself.</p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline__card">
+                    <div class="timeline__year">2023 — 2026</div>
+                    <div class="timeline__institution">SMK Negeri 1 Banjar</div>
+                    <div class="timeline__major" data-i18n="edu_smk_major">Software Engineering · RPL</div>
+                    <p class="timeline__desc" data-i18n="edu_smk_desc">Three years focused on building foundations:
+                        basic programming, databases, web programming, and a full cycle of internship projects. Here I
+                        learned that "finished" is a harder word than "running".</p>
+                    <div class="timeline__tags">
+                        <span class="timeline__tag" data-i18n="edu_tag1">Basic Programming</span>
+                        <span class="timeline__tag" data-i18n="edu_tag2">Database</span>
+                        <span class="timeline__tag" data-i18n="edu_tag3">Web Programming</span>
+                        <span class="timeline__tag" data-i18n="edu_tag4">Internship</span>
+                    </div>
+                </div>
+
+                <div class="timeline__card">
+                    <div class="timeline__year" data-i18n="edu_uni_year">2026 — present</div>
+                    <div class="timeline__institution">Universitas Teknologi Bandung</div>
+                    <div class="timeline__major" data-i18n="edu_uni_major">Bachelor's · Informatics Engineering</div>
+                    <p class="timeline__desc" data-i18n="edu_uni_desc">Continuing to a Bachelor's in Informatics
+                        Engineering. Focus broadens — from just writing apps to understanding why a system is designed
+                        that way, and when to reject convention.</p>
+                    <div class="timeline__tags">
+                        <span class="timeline__tag" data-i18n="edu_tag5">Algorithms</span>
+                        <span class="timeline__tag" data-i18n="edu_tag6">Data Structures</span>
+                        <span class="timeline__tag" data-i18n="edu_tag7">Software Engineering</span>
+                        <span class="timeline__tag" data-i18n="edu_tag8">UI/UX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOKUS ===== -->
+    <section class="focus" id="focus">
+        <div class="container">
+            <div class="section-label-row">
+                <span class="label" data-i18n="focus_label">03 / Focus</span>
+                <span class="section-num">§ 03 — 05</span>
+            </div>
+
+            <div class="focus__head">
+                <h2 class="focus__title">
+                    <span class="line"><span class="line__inner" data-i18n="focus_h1">Three maps</span></span>
+                    <span class="line"><span class="line__inner" data-i18n="focus_h2">I'm currently
+                            exploring.</span></span>
+                </h2>
+                <p class="focus__intro" data-i18n="focus_intro">Not specializations — more like three directions I
+                    intentionally keep lit simultaneously. All three feed each other.</p>
+            </div>
+
+            <div class="focus__grid">
+                <div class="focus__item">
+                    <div class="focus__item-num">A · 01</div>
+                    <h3 class="focus__item-title">Front-end</h3>
+                    <div class="focus__item-en">Interface Engineering</div>
+                    <p class="focus__item-desc" data-i18n="focus_fe_desc">Lightweight, semantic interfaces that don't
+                        waste user time. I cut more often than I add.</p>
+                    <div class="focus__item-stack">
+                        <span>HTML <strong>5</strong></span>
+                        <span>CSS <strong>3 / Tailwind</strong></span>
+                        <span>JavaScript <strong>ES6+</strong></span>
+                        <span>React <strong>Next.js</strong></span>
+                    </div>
+                </div>
+
+                <div class="focus__item">
+                    <div class="focus__item-num">A · 02</div>
+                    <h3 class="focus__item-title">Back-end</h3>
+                    <div class="focus__item-en">System & API Design</div>
+                    <p class="focus__item-desc" data-i18n="focus_be_desc">Consistent APIs, clear database relations, and
+                        endpoints that don't need deciphering. Documentation is part of the code.</p>
+                    <div class="focus__item-stack">
+                        <span>Node.js <strong>Express</strong></span>
+                        <span>PHP <strong>Laravel</strong></span>
+                        <span>Python <strong>Flask</strong></span>
+                        <span>Database <strong>MySQL · PostgreSQL</strong></span>
+                    </div>
+                </div>
+
+                <div class="focus__item">
+                    <div class="focus__item-num">A · 03</div>
+                    <h3 class="focus__item-title">UI / UX</h3>
+                    <div class="focus__item-en">Interaction Design</div>
+                    <p class="focus__item-desc" data-i18n="focus_ui_desc">Not design that looks pretty on Dribbble —
+                        design that still makes sense after three months of use. Microcopy, rhythm, and hierarchy.</p>
+                    <div class="focus__item-stack">
+                        <span>Figma <strong>prototyping</strong></span>
+                        <span>Tailwind <strong>design tokens</strong></span>
+                        <span>Motion <strong>GSAP · Lenis</strong></span>
+                        <span>Study <strong>usability</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== KARYA (horizontal pin) ===== -->
+    <section class="works" id="works">
+        <div class="works__head">
+            <div>
+                <div class="section-label-row" style="margin-bottom: 1.5rem; border: none; padding: 0;">
+                    <span class="label" data-i18n="works_label">04 / Works</span>
+                    <span class="section-num">§ 04 — 05</span>
+                </div>
+                <h2 class="works__title">
+                    <span class="line"><span class="line__inner" data-i18n="works_h1">What has</span></span>
+                    <span class="line"><span class="line__inner" data-i18n="works_h2">happened on screen.</span></span>
+                </h2>
+            </div>
+            <p class="works__intro" data-i18n="works_intro">A collection of personal and academic projects — sorted from
+                newest. Swipe horizontally, or scroll vertically as usual.</p>
+        </div>
+
+        <div class="works__viewport" id="worksViewport">
+            <div class="works__sticky" id="worksSticky">
+                <div class="works__track" id="worksTrack">
+
+                    <article class="work-card">
+                        <div class="work-card__img">
+                            <img src="img/project3.png" alt="Karaktus.inc">
+                        </div>
+                        <div class="work-card__meta">
+                            <span>2025 · Karaktus.inc</span>
+                            <span>01 / 05</span>
+                        </div>
+                        <h3 class="work-card__title">Karaktus.inc - Landing Page</h3>
+                        <p class="work-card__desc" data-i18n="work1_desc">Karaktus.Inc Semi E-Commerce Landing Page.
+                            Selling T-shirts with the best quality.</p>
+                        <div class="work-card__tags">
+                            <span class="work-card__tag">HTML</span>
+                            <span class="work-card__tag">CSS Bootstrap</span>
+                            <span class="work-card__tag">JS</span>
+                        </div>
+                        <a href="https://karaktus.netlify.app/" target="_blank" rel="noopener" class="work-card__link">
+                            <span data-i18n="view_project">View Project</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </article>
+
+                    <article class="work-card">
+                        <div class="work-card__img">
+                            <img src="img/Screenshot 2026-09-03 170056.png" alt="Sonic Clap Camera">
+                        </div>
+                        <div class="work-card__meta">
+                            <span>2025 · Sonic Clap Camera</span>
+                            <span>02 / 05</span>
+                        </div>
+                        <h3 class="work-card__title">Sonic Clap Camera</h3>
+                        <p class="work-card__desc" data-i18n="work2_desc">A camera recording app that triggers photo
+                            capture automatically when it detects the sound of a clap. Built with Web Audio API.</p>
+                        <div class="work-card__tags">
+                            <span class="work-card__tag">Next.js</span>
+                            <span class="work-card__tag">Tailwind</span>
+                            <span class="work-card__tag">Web Audio API</span>
+                        </div>
+                        <a href="https://dydan-n.github.io/Sonic-Clap/" target="_blank" rel="noopener"
+                            class="work-card__link">
+                            <span data-i18n="view_project">View Project</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </article>
+
+                    <article class="work-card">
+                        <div class="work-card__img">
+                            <img src="img/project2.png" alt="Nihongo Bengkyou">
+                        </div>
+                        <div class="work-card__meta">
+                            <span>2026 · Academic</span>
+                            <span>03 / 05</span>
+                        </div>
+                        <h3 class="work-card__title">Nihongo Bengkyou</h3>
+                        <p class="work-card__desc" data-i18n="work3_desc">Web App to learn Japanese according to what is
+                            in Minna no Nihongo. Includes Flashcard kotoba, kanji, bunpou, etc.</p>
+                        <div class="work-card__tags">
+                            <span class="work-card__tag">HTML</span>
+                            <span class="work-card__tag">Bootstrap</span>
+                            <span class="work-card__tag">JS</span>
+                        </div>
+                        <a href="https://jouzuninaru26.oneapp.dev/" target="_blank" rel="noopener"
+                            class="work-card__link">
+                            <span data-i18n="view_project">View Project</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </article>
+
+                    <article class="work-card">
+                        <div class="work-card__img">
+                            <img src="img/project5.png" alt="Kana Spirit">
+                        </div>
+                        <div class="work-card__meta">
+                            <span>2026 · Academic</span>
+                            <span>04 / 05</span>
+                        </div>
+                        <h3 class="work-card__title">Kana Spirit</h3>
+                        <p class="work-card__desc" data-i18n="work4_desc">Kana Spirit: Lost Soul Guide is an educational
+                            game with a mystical Japanese night theme. The player acts as a spirit guide tasked with
+                            freeing lost souls. To free them, the player must type the romaji reading of the hiragana or
+                            katakana characters on the soul's face.</p>
+                        <div class="work-card__tags">
+                            <span class="work-card__tag">HTML</span>
+                            <span class="work-card__tag">CSS Bootstrap</span>
+                            <span class="work-card__tag">JS</span>
+                        </div>
+                        <a href="https://hirakana_bydydan26.oneapp.dev/" target="_blank" rel="noopener"
+                            class="work-card__link">
+                            <span data-i18n="view_project">View Project</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </article>
+
+                    <article class="work-card">
+                        <div class="work-card__img">
+                            <img src="img/project4.png" alt="Portfolio Pribadi">
+                        </div>
+                        <div class="work-card__meta">
+                            <span>2024 · Pribadi</span>
+                            <span>05 / 05</span>
+                        </div>
+                        <h3 class="work-card__title">Portfolio Pribadi</h3>
+                        <p class="work-card__desc" data-i18n="work5_desc">My first personal portfolio web when I was
+                            still in school.</p>
+                        <div class="work-card__tags">
+                            <span class="work-card__tag">HTML</span>
+                            <span class="work-card__tag">CSS</span>
+                            <span class="work-card__tag">JS</span>
+                        </div>
+                        <a href="https://portfolio-dydan.netlify.app/" target="_blank" rel="noopener"
+                            class="work-card__link">
+                            <span data-i18n="view_project">View Project</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </article>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="works__progress">
+            <div class="works__progress-bar" id="worksProgressBar"></div>
+            <div class="works__progress-label">
+                <span>01</span>
+                <span id="worksProgressNum">05</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PRINSIP ===== -->
+    <section class="principle">
+        <div class="principle__inner">
+            <div class="section-label-row">
+                <span class="label" data-i18n="principle_label">05 / Principle</span>
+                <span class="section-num">§ 05 — 05</span>
+            </div>
+
+            <p class="principle__manifesto" id="principleManifesto">
+                <span class="line"><span class="line__inner" data-i18n="prin_l1">I don't write code to</span></span>
+                <span class="line"><span class="line__inner" data-i18n="prin_l2">impress anyone. I write</span></span>
+                <span class="line"><span class="line__inner" data-i18n="prin_l3">so that two years from
+                        now,</span></span>
+                <span class="line"><span class="line__inner" data-i18n="prin_l4">I can still read it
+                        without</span></span>
+                <span class="line"><span class="line__inner" data-i18n="prin_l5">cursing myself.</span></span>
+            </p>
+
+            <div class="principle__sign">
+                <div class="principle__sign-name">— Didan R. A. Matin</div>
+                <div class="principle__sign-meta">
+                    Ciamis · 9 Okt 2007<br>
+                    Mahasiswa · UTB
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== KONTAK ===== -->
+    <section class="contact" id="contact">
+        <div class="contact__watermark">CONTACT</div>
+        <div class="container">
+            <div class="section-label-row">
+                <span class="label" data-i18n="contact_label">06 / Contact</span>
+                <span class="section-num">§ akhir</span>
+            </div>
+
+            <div class="contact__grid">
+                <h2 class="contact__title">
+                    <span class="line"><span class="line__inner" data-i18n="con_h1">Got an idea,</span></span>
+                    <span class="line"><span class="line__inner" data-i18n="con_h2">project, or</span></span>
+                    <span class="line"><span class="line__inner" data-i18n="con_h3">question?</span></span>
+                </h2>
+
+                <div class="contact__right">
+                    <a href="mailto:didanramdhani@example.com" class="contact__email">dydan610@gmail.com</a>
+
+                    <div class="contact__channels">
+                        <a href="https://github.com/" target="_blank" rel="noopener" class="contact__channel">
+                            <span class="contact__channel-name">GitHub</span>
+                            <span class="contact__channel-handle">@dydanramdhani</span>
+                        </a>
+                        <a href="https://www.linkedin.com/" target="_blank" rel="noopener" class="contact__channel">
+                            <span class="contact__channel-name">LinkedIn</span>
+                            <span class="contact__channel-handle">in/didanramdhani</span>
+                        </a>
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="contact__channel">
+                            <span class="contact__channel-name">Instagram</span>
+                            <span class="contact__channel-handle">@dydanrmdni</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact__bottom">
+                <div class="contact__availability" data-i18n="con_avail">Available for freelance projects & student
+                    collaborations</div>
+                <div class="contact__copyright">
+                    © 2026 Didan Ramdhani Abdul Matin<br>
+                    Ciamis → Bandung, ID · v1.0
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ===== TRANSLATION DICTIONARY =====
+        const translations = {
+            en: {
+                nav_about: "Identity", nav_education: "Education", nav_focus: "Focus", nav_works: "Works", nav_contact: "Contact",
+                hero_label: "Portfolio · 2026 / 2027",
+                hero_cta: "View Works", hero_cta_sec_1: "or", hero_cta_sec_2: "start a conversation", hero_scroll: "Scroll down",
+                hero_subtitle: "Informatics Engineering Student at UTB. RPL SMKN 1 Banjar Graduate. Building precise interfaces — and code that remains readable two years ahead.",
+                about_label: "01 / Identity", about_short: "Short Profile",
+                about_h1: "Building", about_h2: "interfaces that are", about_h3: "precise and calm.",
+                id_full_name: "Full Name", id_full_name_desc: "Called: Didan",
+                id_dob: "Place & Date of Birth", id_dob_desc: "18 years · West Java, Indonesia",
+                id_school: "High School", id_school_desc: "Major: Software Engineering (RPL)",
+                id_uni: "University", id_uni_desc: "Major: Informatics Engineering · Bachelor's",
+                id_dom: "Domicile", id_dom_val: "Ciamis, West Java", id_dom_desc: "Status: active student",
+                id_lang: "Languages", id_lang_desc: "Technical docs read in EN",
+                bio_p1: "I used to think software engineering was just about writing code that runs. But in RPL at SMKN 1 Banjar, I learned that good code is code that can still be read two years from now — by yourself, or by someone who has never met you.",
+                bio_p2: "Now at UTB, my focus slowly shifts from \"it works\" to \"it feels right\" — interfaces that aren't flashy, performance that isn't dramatic, and structures that can be inherited without surprises.",
+                edu_label: "02 / Education",
+                edu_h1: "From RPL to", edu_h2: "Informatics Engineering.",
+                edu_intro: "Three years in high school understanding the foundation, at university starting to question the foundation itself.",
+                edu_smk_major: "Software Engineering · RPL",
+                edu_smk_desc: "Three years focused on building foundations: basic programming, databases, web programming, and a full cycle of internship projects. Here I learned that \"finished\" is a harder word than \"running\".",
+                edu_tag1: "Basic Programming", edu_tag2: "Database", edu_tag3: "Web Programming", edu_tag4: "Internship",
+                edu_uni_year: "2026 — present", edu_uni_major: "Bachelor's · Informatics Engineering",
+                edu_uni_desc: "Continuing to a Bachelor's in Informatics Engineering. Focus broadens — from just writing apps to understanding why a system is designed that way, and when to reject convention.",
+                edu_tag5: "Algorithms", edu_tag6: "Data Structures", edu_tag7: "Software Engineering", edu_tag8: "UI/UX",
+                focus_label: "03 / Focus",
+                focus_h1: "Three maps", focus_h2: "I'm currently exploring.",
+                focus_intro: "Not specializations — more like three directions I intentionally keep lit simultaneously. All three feed each other.",
+                focus_fe_desc: "Lightweight, semantic interfaces that don't waste user time. I cut more often than I add.",
+                focus_be_desc: "Consistent APIs, clear database relations, and endpoints that don't need deciphering. Documentation is part of the code.",
+                focus_ui_desc: "Not design that looks pretty on Dribbble — design that still makes sense after three months of use. Microcopy, rhythm, and hierarchy.",
+                works_label: "04 / Works", works_h1: "What has", works_h2: "happened on screen.",
+                works_intro: "A collection of personal and academic projects — sorted from newest. Swipe horizontally, or scroll vertically as usual.",
+                work1_desc: "Karaktus.Inc Semi E-Commerce Landing Page. Selling T-shirts with the best quality.",
+                work2_desc: "A camera recording app that triggers photo capture automatically when it detects the sound of a clap. Built with Web Audio API.",
+                work3_desc: "Web App to learn Japanese according to what is in Minna no Nihongo. Includes Flashcard kotoba, kanji, bunpou, etc.",
+                work4_desc: "Kana Spirit: Lost Soul Guide is an educational game with a mystical Japanese night theme. The player acts as a spirit guide tasked with freeing lost souls. To free them, the player must type the romaji reading of the hiragana or katakana characters on the soul's face.",
+                work5_desc: "My first personal portfolio web when I was still in school.",
+                view_project: "View Project",
+                principle_label: "05 / Principle",
+                prin_l1: "I don't write code to", prin_l2: "impress anyone. I write", prin_l3: "so that two years from now,", prin_l4: "I can still read it without", prin_l5: "cursing myself.",
+                contact_label: "06 / Contact", con_h1: "Got an idea,", con_h2: "project, or", con_h3: "question?",
+                con_avail: "Available for freelance projects & student collaborations"
+            },
+            id: {
+                nav_about: "Identitas", nav_education: "Pendidikan", nav_focus: "Fokus", nav_works: "Karya", nav_contact: "Kontak",
+                hero_label: "Portfolio · 2026 / 2027",
+                hero_cta: "Lihat Karya", hero_cta_sec_1: "atau", hero_cta_sec_2: "mulai obrolan", hero_scroll: "Scroll ke bawah",
+                hero_subtitle: "Mahasiswa Teknik Informatika UTB. Lulusan RPL SMKN 1 Banjar. Membangun antarmuka yang presisi — dan kode yang bisa dibaca dua tahun ke depan.",
+                about_label: "01 / Identitas", about_short: "Profil singkat",
+                about_h1: "Membangun", about_h2: "antarmuka yang", about_h3: "presisi dan tenang.",
+                id_full_name: "Nama lengkap", id_full_name_desc: "Dipanggil: Didan",
+                id_dob: "Tempat, tanggal lahir", id_dob_desc: "18 tahun · Jawa Barat, Indonesia",
+                id_school: "Asal sekolah", id_school_desc: "Jurusan: Rekayasa Perangkat Lunak (RPL)",
+                id_uni: "Universitas sekarang", id_uni_desc: "Jurusan: Teknik Informatika · S1",
+                id_dom: "Domisili", id_dom_val: "Ciamis, Jawa Barat", id_dom_desc: "Status: mahasiswa aktif",
+                id_lang: "Bahasa", id_lang_desc: "Dokumentasi teknis dibaca dalam EN",
+                bio_p1: "Saya pernah mengira software engineering hanya soal menulis kode yang berjalan. Tapi di RPL SMKN 1 Banjar saya belajar bahwa kode yang baik adalah kode yang masih bisa dibaca dua tahun ke depan — oleh diri sendiri, atau oleh orang lain yang tidak pernah bertemu Anda.",
+                bio_p2: "Sekarang di UTB, fokus saya pelan-pelan bergeser dari \"bisa jalan\" menjadi \"terasa benar\" — antarmuka yang tidak neko-neko, performa yang tidak dramatis, dan struktur yang bisa diturunkan tanpa kejutan.",
+                edu_label: "02 / Pendidikan",
+                edu_h1: "Dari RPL ke", edu_h2: "Teknik Informatika.",
+                edu_intro: "Tiga tahun di SMK memahami fondasi, di universitas mulai mempertanyakan fondasi itu sendiri.",
+                edu_smk_major: "Rekayasa Perangkat Lunak · RPL",
+                edu_smk_desc: "Tiga tahun fokus membangun fondasi: pemrograman dasar, basis data, pemrograman web, dan satu siklus penuh proyek PKL. Di sini saya belajar bahwa \"selesai\" adalah kata yang lebih sulit dari \"berjalan\".",
+                edu_tag1: "Pemrograman Dasar", edu_tag2: "Basis Data", edu_tag3: "Pemrograman Web", edu_tag4: "PKL",
+                edu_uni_year: "2026 — sekarang", edu_uni_major: "S1 · Teknik Informatika",
+                edu_uni_desc: "Lanjut ke S1 Teknik Informatika. Fokus mulai melebar — dari sekadar menulis aplikasi ke memahami kenapa sebuah sistem dirancang begitu, dan kapan harus menolak konvensi.",
+                edu_tag5: "Algoritma", edu_tag6: "Struktur Data", edu_tag7: "Rekayasa Perangkat Lunak", edu_tag8: "UI/UX",
+                focus_label: "03 / Fokus",
+                focus_h1: "Tiga peta", focus_h2: "yang sedang saya dalami.",
+                focus_intro: "Bukan spesialisasi — lebih seperti tiga arah yang sengaja saya jaga tetap menyala bersamaan. Ketiganya saling memberi makan.",
+                focus_fe_desc: "Antarmuka yang ringan, semantik, dan tidak membuang waktu pengguna. Saya lebih sering memotong daripada menambah.",
+                focus_be_desc: "API yang konsisten, basis data yang jelas relasinya, dan endpoint yang tidak memerlukan deciphering. Dokumentasi adalah bagian dari kode.",
+                focus_ui_desc: "Bukan desain yang cantik di Dribbble — desain yang masih masuk akal setelah dipakai tiga bulan. Microcopy, ritme, dan hirarki.",
+                works_label: "04 / Karya", works_h1: "Yang sudah", works_h2: "terjadi di layar.",
+                works_intro: "Kumpulan project pribadi dan akademik — diurutkan dari yang paling baru. Geser horizontal, atau scroll vertikal seperti biasa.",
+                work1_desc: "Web Landing Page Semi E Commerce Karaktus.Inc. Menjual Tshirt dengan kualitas terbaik.",
+                work2_desc: "Aplikasi kamera perekam yang memicu pengambilan foto secara otomatis saat mendeteksi suara tepuk tangan. Dibangun dengan Web Audio API.",
+                work3_desc: "Web App untuk belajar bahasa jepang sesuai dengan yang ada di Minna no Nihongo. Terdapat Flashcard kotoba, kanji, bunpou dll.",
+                work4_desc: "Kana Spirit: Pemandu Roh Hilang adalah game edukasi bertema malam mistis Jepang. Pemain berperan sebagai pemandu roh yang bertugas membebaskan roh-roh tersesat. Untuk membebaskannya, pemain harus mengetik bacaan romaji dari huruf hiragana atau katakana yang tertera di wajah roh tersebut.",
+                work5_desc: "Web Portfolio pertama saya ketika masih sekolah.",
+                view_project: "Lihat Project",
+                principle_label: "05 / Prinsip",
+                prin_l1: "Saya tidak menulis kode untuk", prin_l2: "mengesankan siapa pun. Saya menulis", prin_l3: "agar dua tahun dari sekarang,", prin_l4: "saya masih bisa membacanya tanpa", prin_l5: "mengutuk diri sendiri.",
+                contact_label: "06 / Kontak", con_h1: "Punya ide,", con_h2: "project, atau", con_h3: "pertanyaan?",
+                con_avail: "Tersedia untuk proyek freelance & kolaborasi mahasiswa"
+            },
+            jp: {
+                nav_about: "アイデンティティ", nav_education: "学歴", nav_focus: "焦点", nav_works: "作品", nav_contact: "連絡先",
+                hero_label: "ポートフォリオ · 2026 / 2027",
+                hero_cta: "作品を見る", hero_cta_sec_1: "または", hero_cta_sec_2: "会話を始める", hero_scroll: "下にスクロール",
+                hero_subtitle: "UTB情報工学科の学生。RPL SMKN 1 Banjar卒業。正確なインターフェースを構築し、2年先まで読めるコードを書きます。",
+                about_label: "01 / アイデンティティ", about_short: "簡単なプロフィール",
+                about_h1: "構築する", about_h2: "インターフェースは", about_h3: "正確で落ち着いている。",
+                id_full_name: "フルネーム", id_full_name_desc: "呼び名: Didan",
+                id_dob: "出生地・日", id_dob_desc: "18歳 · 西ジャワ, インドネシア",
+                id_school: "高校", id_school_desc: "専攻: ソフトウェア工学 (RPL)",
+                id_uni: "大学", id_uni_desc: "専攻: 情報工学 · 学士",
+                id_dom: "住所", id_dom_val: "チャミス, 西ジャワ", id_dom_desc: "ステータス: 在校生",
+                id_lang: "言語", id_lang_desc: "技術文書は英語で読む",
+                bio_p1: "私はかつて、ソフトウェアエンジニアリングとは実行されるコードを書くことだけだと思っていました。しかし、RPL SMKN 1 Banjarで、良いコードとは2年後でも自分や、会ったことのない他人が読めるコードだと学びました。",
+                bio_p2: "現在UTBでは、「動く」ことから「正しく感じる」ものへと焦点が徐々に移っています。派手すぎないインターフェース、劇的すぎないパフォーマンス、驚きなく継承できる構造。",
+                edu_label: "02 / 学歴",
+                edu_h1: "RPLから", edu_h2: "情報工学へ。",
+                edu_intro: "高校で3年間基礎を理解し、大学でその基礎そのものに疑問を持ちはじめる。",
+                edu_smk_major: "ソフトウェア工学 · RPL",
+                edu_smk_desc: "基礎の構築に焦点を当てた3年間: 基礎プログラミング、データベース、Webプログラミング、そしてインターンシップの完全なサイクル。ここで「終わった」は「動いている」より難しい言葉だと学びました。",
+                edu_tag1: "基礎プログラミング", edu_tag2: "データベース", edu_tag3: "Webプログラミング", edu_tag4: "インターン",
+                edu_uni_year: "2026 — 現在", edu_uni_major: "学士 · 情報工学",
+                edu_uni_desc: "情報工学の学士へ進学。焦点は広がり — アプリを書くことから、なぜシステムがそのように設計されたのか、いつ慣習を拒否すべきかを理解することへ。",
+                edu_tag5: "アルゴリズム", edu_tag6: "データ構造", edu_tag7: "ソフトウェア工学", edu_tag8: "UI/UX",
+                focus_label: "03 / 焦点",
+                focus_h1: "3つの地図", focus_h2: "現在探求しているもの。",
+                focus_intro: "専門化ではなく — 同時に点灯させている3つの方向のようなもの。3つすべてが互いに養い合っています。",
+                focus_fe_desc: "ユーザーの時間を無無駄にしない、軽量でセマンティックなインターフェース。追加するよりも切り取ることの方が多いです。",
+                focus_be_desc: "一貫したAPI、明確なデータベース関係、解読を必要としないエンドポイント。ドキュメントはコードの一部です。",
+                focus_ui_desc: "Dribbbleで美しく見えるデザインではなく — 3ヶ月使用しても理にかなっているデザイン。マイクロコピー、リズム、ヒエラルキー。",
+                works_label: "04 / 作品", works_h1: "画面に起きた", works_h2: "出来事。",
+                works_intro: "個人および学術的なプロジェクトのコレクション — 新しい順に並べています。横にスワイプするか、いつも通り縦にスクロールします。",
+                work1_desc: "Karaktus.Inc セミEコマースランディングページ。最高品質のTシャツを販売。",
+                work2_desc: "拍手の音を検知すると自動的に写真撮影をトリガーするカメラ録画アプリ。Web Audio APIで構築。",
+                work3_desc: "みんなの日本語に基づいて日本語を学ぶためのWebアプリ。単語、漢字、文法などのフラッシュカードを含む。",
+                work4_desc: "Kana Spirit: 失われた魂の案内人は、日本的な神秘的な夜をテーマにした教育ゲームです。プレイヤーは迷子の魂を解放する案内人として役割を果たします。解放するためには、魂の顔にあるひらがなまたはカタカナのローマ字読みを入力する必要があります。",
+                work5_desc: "学生時代に作った最初の個人ポートフォリオサイト。",
+                view_project: "プロジェクトを見る",
+                principle_label: "05 / 原則",
+                prin_l1: "私は誰かを感動させるために", prin_l2: "コードを書くのではない。私は", prin_l3: "2年後に、", prin_l4: "自分を呪うことなく", prin_l5: "読めるように書く。",
+                contact_label: "06 / 連絡先", con_h1: "アイデア、", con_h2: "プロジェクト、または", con_h3: "質問がありますか？",
+                con_avail: "フリーランスのプロジェクトと学生のコラボレーションに対応可能"
+            }
+        };
+
+        // ===== TRANSLATION LOGIC =====
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            // Update typewriter effect if hero text is empty / waiting to start
+            const heroTextEl = document.querySelector('.hero__text');
+            if (heroTextEl && heroTextEl.textContent === '') {
+                // do nothing, typewriter will pick it up
+            } else if (heroTextEl) {
+                heroTextEl.textContent = translations[lang].hero_subtitle;
+            }
+
+            // Save preference
+            localStorage.setItem('lang', lang);
+        }
+
+        // ===== THEME TOGGLE LOGIC =====
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        (function () {
+            'use strict';
+
+            // ===== INIT SETTINGS =====
+            const savedLang = localStorage.getItem('lang') || 'en'; // Default to English
+            const savedTheme = localStorage.getItem('theme') || 'dark'; // Default to Dark
+
+            document.getElementById('langSwitcher').value = savedLang;
+            setLanguage(savedLang);
+
+            applyTheme(savedTheme);
+
+            document.getElementById('langSwitcher').addEventListener('change', (e) => {
+                setLanguage(e.target.value);
+            });
+
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                if (document.body.classList.contains('light-mode')) {
+                    applyTheme('dark');
+                } else {
+                    applyTheme('light');
+                }
+            });
+
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+
+            /* ===== Lenis smooth scroll ===== */
+            let lenis = null;
+            if (!prefersReducedMotion && typeof Lenis !== 'undefined') {
+                lenis = new Lenis({
+                    duration: 1.1,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    smoothWheel: true,
+                    smoothTouch: false,
+                });
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+
+                if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                    gsap.registerPlugin(ScrollTrigger);
+                    lenis.on('scroll', ScrollTrigger.update);
+                    gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+                    gsap.ticker.lagSmoothing(0);
+                }
+
+                document.querySelectorAll('a[href^="#"]').forEach((link) => {
+                    link.addEventListener('click', (e) => {
+                        const id = link.getAttribute('href');
+                        if (id && id.length > 1) {
+                            const target = document.querySelector(id);
+                            if (target) {
+                                e.preventDefault();
+                                lenis.scrollTo(target, { offset: -60, duration: 1.4 });
+                            }
+                        }
+                    });
+                });
+            }
+
+            /* ===== Clock (WIB) ===== */
+            function updateClock() {
+                const now = new Date();
+                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                const wib = new Date(utc + (7 * 3600000));
+
+                const pad = (n) => String(n).padStart(2, '0');
+                const hh = pad(wib.getHours());
+                const mm = pad(wib.getMinutes());
+                const ss = pad(wib.getSeconds());
+
+                const navTimeEl = document.getElementById('navTime');
+                const heroTimeEl = document.getElementById('heroTime');
+                const heroDateEl = document.getElementById('heroDate');
+
+                if (navTimeEl) navTimeEl.textContent = hh + ':' + mm + ' WIB';
+                if (heroTimeEl) heroTimeEl.textContent = hh + ':' + mm + ':' + ss + ' WIB';
+
+                const lang = document.documentElement.lang || 'en';
+                let days, months;
+                if (lang === 'id') {
+                    days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                    months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                } else if (lang === 'jp') {
+                    days = ['日', '月', '火', '水', '木', '金', '土'];
+                    months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+                } else {
+                    days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                }
+
+                if (heroDateEl) {
+                    if (lang === 'jp') {
+                        heroDateEl.textContent = wib.getFullYear() + '年 ' + months[wib.getMonth()] + ' ' + wib.getDate() + '日 (' + days[wib.getDay()] + ')';
+                    } else {
+                        heroDateEl.textContent = days[wib.getDay()] + ', ' + wib.getDate() + ' ' + months[wib.getMonth()] + ' ' + wib.getFullYear();
+                    }
+                }
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            /* ===== Hero typewriter ===== */
+            const heroTextEl = document.querySelector('.hero__text');
+            const heroCaret = document.getElementById('heroCaret');
+            const heroCta = document.getElementById('heroCta');
+
+            if (heroTextEl) {
+                const typeText = () => translations[document.documentElement.lang].hero_subtitle;
+
+                if (prefersReducedMotion) {
+                    heroTextEl.textContent = typeText();
+                    heroCaret.classList.add('is-hidden');
+                    heroCta.classList.add('is-shown');
+                } else {
+                    let i = 0;
+                    setTimeout(() => {
+                        const tick = setInterval(() => {
+                            const src = typeText();
+                            i++;
+                            heroTextEl.textContent = src.slice(0, i);
+                            if (i >= src.length) {
+                                clearInterval(tick);
+                                let n = 0, on = true;
+                                const blink = setInterval(() => {
+                                    on = !on;
+                                    heroCaret.classList.toggle('is-hidden', !on);
+                                    if (++n >= 6) {
+                                        clearInterval(blink);
+                                        heroCaret.classList.add('is-hidden');
+                                        heroCta.classList.add('is-shown');
+                                    }
+                                }, 400);
+                            }
+                        }, 38);
+                    }, 600);
+                }
+            }
+
+            /* ===== Hero title reveal ===== */
+            if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+                gsap.to('.hero__title .line__inner', {
+                    y: 0, duration: 1.4, ease: 'expo.out', stagger: 0.14, delay: 0.2
+                });
+            } else {
+                document.querySelectorAll('.hero__title .line__inner').forEach(el => el.style.transform = 'translateY(0)');
+            }
+
+            /* ===== IntersectionObserver: line-mask reveals ===== */
+            const revealTargets = ['.about__heading', '.education__title', '.focus__title', '.works__title', '.contact__title'];
+            revealTargets.forEach((selector) => {
+                document.querySelectorAll(selector).forEach((el) => {
+                    const io = new IntersectionObserver((entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
+                        });
+                    }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
+                    io.observe(el);
+                });
+            });
+
+            /* ===== Principle manifesto reveal ===== */
+            const manifesto = document.getElementById('principleManifesto');
+            if (manifesto) {
+                const io = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
+                    });
+                }, { threshold: 0.35 });
+                io.observe(manifesto);
+            }
+
+            /* ===== Works: horizontal pin scroll ===== */
+            const worksViewport = document.getElementById('worksViewport');
+            const worksSticky = document.getElementById('worksSticky');
+            const worksTrack = document.getElementById('worksTrack');
+            const progressBar = document.getElementById('worksProgressBar');
+            const progressNum = document.getElementById('worksProgressNum');
+            const totalCards = worksTrack ? worksTrack.querySelectorAll('.work-card').length : 0;
+            if (progressNum) progressNum.textContent = String(totalCards).padStart(2, '0');
+
+            let trackScrollWidth = 0;
+            let lastScrollY = window.scrollY;
+            let skewTimeout = null;
+            let isDesktop = window.matchMedia('(min-width: 1025px)').matches;
+
+            function recalcWorks() {
+                if (!worksViewport || !worksTrack) return;
+                isDesktop = window.matchMedia('(min-width: 1025px)').matches;
+                if (!isDesktop) { worksViewport.style.height = ''; worksTrack.style.transform = ''; return; }
+                trackScrollWidth = worksTrack.scrollWidth - window.innerWidth;
+                if (trackScrollWidth < 0) trackScrollWidth = 0;
+                worksViewport.style.height = (window.innerHeight + trackScrollWidth) + 'px';
+            }
+
+            function onScrollWorks() {
+                if (!worksViewport || !worksTrack || !isDesktop) return;
+                const rect = worksViewport.getBoundingClientRect();
+                const top = rect.top;
+                if (top <= 0 && top >= -trackScrollWidth) {
+                    const p = (-top) / trackScrollWidth;
+                    const translateX = -p * trackScrollWidth;
+                    worksTrack.style.transform = 'translate3d(' + translateX + 'px, 0, 0)';
+                    if (progressBar) progressBar.style.width = (p * 100) + '%';
+
+                    const velocity = window.scrollY - lastScrollY;
+                    lastScrollY = window.scrollY;
+                    const skew = Math.max(-8, Math.min(8, velocity * 0.35));
+                    worksTrack.querySelectorAll('.work-card__img img').forEach((img) => {
+                        img.style.transform = 'scale(1.05) skewX(' + skew + 'deg)';
+                    });
+                    clearTimeout(skewTimeout);
+                    skewTimeout = setTimeout(() => {
+                        worksTrack.querySelectorAll('.work-card__img img').forEach((img) => {
+                            img.style.transform = 'scale(1) skewX(0deg)';
+                        });
+                    }, 180);
+                } else if (top > 0) {
+                    worksTrack.style.transform = 'translate3d(0, 0, 0)';
+                    if (progressBar) progressBar.style.width = '0%';
+                } else if (top < -trackScrollWidth) {
+                    worksTrack.style.transform = 'translate3d(' + (-trackScrollWidth) + 'px, 0, 0)';
+                    if (progressBar) progressBar.style.width = '100%';
+                }
+            }
+
+            recalcWorks();
+            window.addEventListener('resize', recalcWorks);
+            window.addEventListener('scroll', onScrollWorks, { passive: true });
+
+            /* ===== Custom cursor (desktop only) ===== */
+            if (!isCoarsePointer && !prefersReducedMotion) {
+                const cursorDot = document.querySelector('.cursor-dot');
+                const cursorRing = document.querySelector('.cursor-ring');
+                let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX; mouseY = e.clientY;
+                    cursorDot.classList.add('is-visible'); cursorRing.classList.add('is-visible');
+                    cursorDot.style.transform = 'translate(' + (mouseX - 3) + 'px, ' + (mouseY - 3) + 'px)';
+                });
+
+                document.addEventListener('mouseleave', () => {
+                    cursorDot.classList.remove('is-visible'); cursorRing.classList.remove('is-visible');
+                });
+
+                function animateRing() {
+                    ringX += (mouseX - ringX) * 0.15; ringY += (mouseY - ringY) * 0.15;
+                    cursorRing.style.transform = 'translate(' + (ringX - 18) + 'px, ' + (ringY - 18) + 'px)';
+                    requestAnimationFrame(animateRing);
+                }
+                animateRing();
+
+                document.querySelectorAll('a, button, .work-card, .about__portrait, .focus__item, .theme-toggle, .lang-switcher').forEach((el) => {
+                    el.addEventListener('mouseenter', () => {
+                        cursorRing.style.width = '60px'; cursorRing.style.height = '60px'; cursorRing.style.borderColor = 'rgba(255,255,255,0.9)';
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursorRing.style.width = '36px'; cursorRing.style.height = '36px'; cursorRing.style.borderColor = 'rgba(255,255,255,0.5)';
+                    });
+                });
+            }
+
+            /* ===== Smooth section entry for about portrait ===== */
+            const portrait = document.querySelector('.about__portrait img');
+            if (portrait) {
+                const io = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            portrait.style.opacity = '1'; portrait.style.transform = 'scale(1)'; io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.2 });
+                portrait.style.opacity = '0'; portrait.style.transform = 'scale(1.08)';
+                portrait.style.transition = 'opacity 1.2s cubic-bezier(.22,1,.36,1), transform 1.4s cubic-bezier(.22,1,.36,1)';
+                io.observe(portrait);
+            }
+
+            /* ===== Work cards stagger entry ===== */
+            const workCards = document.querySelectorAll('.work-card');
+            if (workCards.length && !prefersReducedMotion) {
+                workCards.forEach((card, idx) => {
+                    card.style.opacity = '0'; card.style.transform = 'translateY(40px)';
+                    card.style.transition = 'opacity 900ms cubic-bezier(.22,1,.36,1), transform 900ms cubic-bezier(.22,1,.36,1)';
+                    card.style.transitionDelay = (idx * 80) + 'ms';
+                });
+
+                const io = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+
+                workCards.forEach((card) => io.observe(card));
+            }
+
+            /* ===== Active nav highlight ===== */
+            const navLinks = document.querySelectorAll('.nav__menu a');
+            const sections = document.querySelectorAll('section[ID]');
+            const navObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.id;
+                        navLinks.forEach((link) => {
+                            link.style.color = link.getAttribute('href') === '#' + id ? 'var(--text)' : '';
+                        });
+                    }
+                });
+            }, { threshold: 0.4 });
+            sections.forEach((s) => navObserver.observe(s));
+
+        })();
+    </script>
+
+</body>
+
+</html>
